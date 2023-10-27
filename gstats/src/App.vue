@@ -2,7 +2,6 @@
 import axios from 'axios'
 import config from '@/config.js'
 import PlayerCard from './components/PlayerCard.vue';
-import HelloWorld from './components/HelloWorld.vue';
 
 /* Get the last time the player connected to the server using an api POST call
  url: https://growlingonline.com:9000/stats/search
@@ -10,12 +9,7 @@ import HelloWorld from './components/HelloWorld.vue';
 */
 
 const headers = {
-  headers: {
-    'Access-Control-Allow-Origin': '/*/',
-    'Sec-Fetch-Mode': 'cors',
-    'Sec-Fetch-Site': 'cross-site',
-    'Sec-Fetch-Dest': 'empty',
-  }
+  'Content-Type': 'multipart/form-data',
 }
 
 const placeholderStats = {
@@ -39,12 +33,12 @@ const placeholderStats = {
 }
 
 const getLastConnected = async () => {
+  const formData = new FormData();
+  formData.append('nick', config.playerName);
+  formData.append('date', null);
   try {
-    const response = await axios.post('https://growlingonline.com:9000/stats/search', headers, {
-      nick: config.playerName,
-      date: null
-    })
-    return response[0]['date']
+    const response = await axios.post('http://localhost:8000/', formData)
+    console.log(response)
   } catch (error) {
     console.error(error);
     console.log("Providing placeholder value")
@@ -53,12 +47,12 @@ const getLastConnected = async () => {
 }
 
 const getStats = async () => {
+  const formData = new FormData();
+  formData.append('nick', config.playerName);
+  formData.append('date', '2023-10-27T11:54:41.188505');
   try {
-    const reponse = await axios.post('https://growlingonline.com:9000/stats/full', headers, {
-      nick: config.playerName,
-      date: lastConnected
-    })
-
+    const response = await axios.post('http://localhost:8000/', formData)
+    console.log(response)
     return response
   } catch (error) {
     console.error(error);
